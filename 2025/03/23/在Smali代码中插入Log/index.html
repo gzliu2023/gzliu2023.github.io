@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1. 准备工作工具准备：  Apktool：用于反编译和重新打包 APK 签名工具：jarsigner（JDK 自带）或 apksigner（Android SDK 提供） 调试工具：adb logcat 查看日志  操作流程：反编译 APK -&gt; 修改 Smali 代码 -&gt; 重新打包 -&gt; 签名 -&gt; 安装测试 2. 反编译 APK1apktool d target.a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Smali 代码中插入 Log">
+<meta property="og:url" content="http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/index.html">
+<meta property="og:site_name" content="羨魚の博客">
+<meta property="og:description" content="1. 准备工作工具准备：  Apktool：用于反编译和重新打包 APK 签名工具：jarsigner（JDK 自带）或 apksigner（Android SDK 提供） 调试工具：adb logcat 查看日志  操作流程：反编译 APK -&gt; 修改 Smali 代码 -&gt; 重新打包 -&gt; 签名 -&gt; 安装测试 2. 反编译 APK1apktool d target.a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-23T06:18:05.000Z">
+<meta property="article:modified_time" content="2025-03-23T06:18:05.000Z">
+<meta property="article:author" content="GZ LIU">
+<meta property="article:tag" content="Smali">
+<meta property="article:tag" content="安卓逆向">
+<meta property="article:tag" content="APK 打包签名">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在 Smali 代码中插入 Log</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/03/20/hello-world/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&text=在 Smali 代码中插入 Log"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&is_video=false&description=在 Smali 代码中插入 Log"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在 Smali 代码中插入 Log&body=Check out this article: http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&name=在 Smali 代码中插入 Log&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&t=在 Smali 代码中插入 Log"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">1. 准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%8D%E7%BC%96%E8%AF%91-APK"><span class="toc-number">2.</span> <span class="toc-text">2. 反编译 APK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8-Smali-%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5%E6%97%A5%E5%BF%97"><span class="toc-number">3.</span> <span class="toc-text">3. 在 Smali 代码中插入日志</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%9A%E4%BD%8D%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">3.1. 定位目标代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%8F%92%E5%85%A5%E6%97%A5%E5%BF%97%E7%9A%84-Smali-%E6%8C%87%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">3.2. 插入日志的 Smali 指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.3.</span> <span class="toc-text">3.3. 注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85-APK"><span class="toc-number">4.</span> <span class="toc-text">4. 重新打包 APK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%AD%BE%E5%90%8D-APK"><span class="toc-number">5.</span> <span class="toc-text">5. 签名 APK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%94%9F%E6%88%90%E7%AD%BE%E5%90%8D%E5%AF%86%E9%92%A5%EF%BC%88%E8%8B%A5%E6%97%A0%E5%8F%AF%E8%B7%B3%E8%BF%87%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%B7%B2%E6%9C%89%E5%AF%86%E9%92%A5%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">5.1. 生成签名密钥（若无可跳过，使用已有密钥）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%BD%BF%E7%94%A8-jarsigner-%E7%AD%BE%E5%90%8D"><span class="toc-number">5.2.</span> <span class="toc-text">5.2. 使用 jarsigner 签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%BD%BF%E7%94%A8-apksigner-%E7%AD%BE%E5%90%8D%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">5.3. 使用 apksigner 签名（推荐）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%AE%89%E8%A3%85%E5%B9%B6%E6%B5%8B%E8%AF%95"><span class="toc-number">6.</span> <span class="toc-text">6. 安装并测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3"><span class="toc-number">7.</span> <span class="toc-text">7. 常见问题与解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%BA%94%E7%94%A8%E5%B4%A9%E6%BA%83%E6%88%96%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8"><span class="toc-number">7.1.</span> <span class="toc-text">7.1. 应用崩溃或无法启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%97%A5%E5%BF%97%E6%9C%AA%E8%BE%93%E5%87%BA"><span class="toc-number">7.2.</span> <span class="toc-text">7.2. 日志未输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E7%AD%BE%E5%90%8D%E5%90%8E%E5%AE%89%E8%A3%85%E5%A4%B1%E8%B4%A5"><span class="toc-number">7.3.</span> <span class="toc-text">7.3. 签名后安装失败</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%AE%8C%E6%95%B4%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="toc-number">8.</span> <span class="toc-text">8. 完整操作流程示例</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在 Smali 代码中插入 Log
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">GZ LIU</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-23T06:18:05.000Z" class="dt-published" itemprop="datePublished">2025-03-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/">安卓逆向</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/APK-%E6%89%93%E5%8C%85%E7%AD%BE%E5%90%8D/" rel="tag">APK 打包签名</a>, <a class="p-category" href="/tags/Smali/" rel="tag">Smali</a>, <a class="p-category" href="/tags/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/" rel="tag">安卓逆向</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><p>工具准备：</p>
+<ul>
+<li>Apktool：用于反编译和重新打包 APK</li>
+<li>签名工具：jarsigner（JDK 自带）或 apksigner（Android SDK 提供）</li>
+<li>调试工具：adb logcat 查看日志</li>
+</ul>
+<p>操作流程：<br>反编译 APK -&gt; 修改 Smali 代码 -&gt; 重新打包 -&gt; 签名 -&gt; 安装测试</p>
+<h2 id="2-反编译-APK"><a href="#2-反编译-APK" class="headerlink" title="2. 反编译 APK"></a>2. 反编译 APK</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apktool d target.apk -o output_dir</span><br></pre></td></tr></table></figure>
+
+<p>反编译后，Smali 代码位于 output_dir&#x2F;smali 目录中</p>
+<h2 id="3-在-Smali-代码中插入日志"><a href="#3-在-Smali-代码中插入日志" class="headerlink" title="3. 在 Smali 代码中插入日志"></a>3. 在 Smali 代码中插入日志</h2><h3 id="3-1-定位目标代码"><a href="#3-1-定位目标代码" class="headerlink" title="3.1. 定位目标代码"></a>3.1. 定位目标代码</h3><ul>
+<li>通过逆向工具（如 Jadx）分析目标代码的大致位置，找到对应的 Smali 文件</li>
+<li>例如：目标代码在 com.example.MainActivity，则 Smali 文件为：</li>
+<li><code>smali/com/example/MainActivity.smali</code></li>
+</ul>
+<h3 id="3-2-插入日志的-Smali-指令"><a href="#3-2-插入日志的-Smali-指令" class="headerlink" title="3.2. 插入日志的 Smali 指令"></a>3.2. 插入日志的 Smali 指令</h3><p>在 Smali 中调用<code>Log.d()</code>需要以下步骤：</p>
+<ol>
+<li>定义 TAG（可选）：在类中定义一个静态字符串作为 TAG</li>
+<li>加载参数：将 TAG 和日志内容加载到寄存器</li>
+<li>调用静态方法：执行<code>Log.d(TAG, message)</code></li>
+</ol>
+<p>示例：在方法中插入日志代码</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原始代码（假设在方法 .method public onCreate()V 内）</span></span><br><span class="line"><span class="keyword">.line</span> 10<span class="built_in"></span></span><br><span class="line"><span class="built_in">const/4 </span>v0, 0x1<span class="built_in"></span></span><br><span class="line"><span class="built_in">iput-boolean </span>v0, p0, <span class="class">Lcom/example/MainActivity;</span>-&gt;isReady:Z</span><br><span class="line"></span><br><span class="line"><span class="comment"># 插入日志代码（添加如下指令）</span><span class="built_in"></span></span><br><span class="line"><span class="built_in">const-string </span>v1, <span class="string">&quot;MyTag&quot;</span>           <span class="comment"># 定义 TAG</span><span class="built_in"></span></span><br><span class="line"><span class="built_in">const-string </span>v2, <span class="string">&quot;Debug message&quot;</span>   <span class="comment"># 日志内容</span><span class="built_in"></span></span><br><span class="line"><span class="built_in">invoke-static </span>&#123;v1, v2&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-注意事项"><a href="#3-3-注意事项" class="headerlink" title="3.3. 注意事项"></a>3.3. 注意事项</h3><ul>
+<li>寄存器冲突：确保<code>v1</code>、<code>v2</code>等寄存器未被占用（根据上下文调整寄存器编号）</li>
+<li>参数顺序：<code>Log.d()</code>的第一个参数是<code>TAG</code> (String)，第二个参数是<code>message</code> (String)</li>
+</ul>
+<h2 id="4-重新打包-APK"><a href="#4-重新打包-APK" class="headerlink" title="4. 重新打包 APK"></a>4. 重新打包 APK</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apktool b output_dir -o unsigned.apk</span><br></pre></td></tr></table></figure>
+
+<p>生成的<code>unsigned.apk</code>是未签名的 APK</p>
+<h2 id="5-签名-APK"><a href="#5-签名-APK" class="headerlink" title="5. 签名 APK"></a>5. 签名 APK</h2><h3 id="5-1-生成签名密钥（若无可跳过，使用已有密钥）"><a href="#5-1-生成签名密钥（若无可跳过，使用已有密钥）" class="headerlink" title="5.1. 生成签名密钥（若无可跳过，使用已有密钥）"></a>5.1. 生成签名密钥（若无可跳过，使用已有密钥）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -genkey -v -keystore mykey.keystore -<span class="built_in">alias</span> myalias -keyalg RSA -keysize 2048 -validity 10000</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-使用-jarsigner-签名"><a href="#5-2-使用-jarsigner-签名" class="headerlink" title="5.2. 使用 jarsigner 签名"></a>5.2. 使用 jarsigner 签名</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore mykey.keystore unsigned.apk myalias</span><br></pre></td></tr></table></figure>
+
+<p>输出文件为<code>signed.apk</code></p>
+<h3 id="5-3-使用-apksigner-签名（推荐）"><a href="#5-3-使用-apksigner-签名（推荐）" class="headerlink" title="5.3. 使用 apksigner 签名（推荐）"></a>5.3. 使用 apksigner 签名（推荐）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apksigner sign --ks mykey.keystore --ks-key-alias myalias signed.apk unsigned.apk</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-安装并测试"><a href="#6-安装并测试" class="headerlink" title="6. 安装并测试"></a>6. 安装并测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb install signed.apk</span><br><span class="line">adb logcat -s <span class="string">&quot;MyTag&quot;</span>   <span class="comment"># 过滤日志</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7-常见问题与解决"><a href="#7-常见问题与解决" class="headerlink" title="7. 常见问题与解决"></a>7. 常见问题与解决</h2><h3 id="7-1-应用崩溃或无法启动"><a href="#7-1-应用崩溃或无法启动" class="headerlink" title="7.1. 应用崩溃或无法启动"></a>7.1. 应用崩溃或无法启动</h3><ul>
+<li>原因：Smali 代码修改错误（如寄存器冲突、指令格式错误）</li>
+<li>解决：<ol>
+<li>检查插入的 Smali 指令语法</li>
+<li>使用<code>adb logcat</code>查看崩溃日志（过滤 AndroidRuntime）</li>
+</ol>
+</li>
+</ul>
+<h3 id="7-2-日志未输出"><a href="#7-2-日志未输出" class="headerlink" title="7.2. 日志未输出"></a>7.2. 日志未输出</h3><ul>
+<li>原因：<ul>
+<li>代码未被执行（断点位置错误）</li>
+<li>日志 TAG 过滤错误</li>
+</ul>
+</li>
+<li>解决：<ol>
+<li>检查插入日志的代码路径是否触发</li>
+<li>使用<code>adb logcat -s MyTag:*</code>确保过滤正确</li>
+</ol>
+</li>
+</ul>
+<h3 id="7-3-签名后安装失败"><a href="#7-3-签名后安装失败" class="headerlink" title="7.3. 签名后安装失败"></a>7.3. 签名后安装失败</h3><ul>
+<li>原因：签名不兼容或 APK 未对齐</li>
+<li>解决：<ol>
+<li>使用<code>zipalign</code>对齐 APK：<code>zipalign -v 4 unsigned.apk aligned.apk</code></li>
+<li>确保使用<code>apksigner</code>而非旧版<code>jarsigner</code>，<code>jarsigner</code>仅支持 V1 签名，需改用<code>apksigner</code>生成 V2&#x2F;V3 签名</li>
+</ol>
+</li>
+</ul>
+<h2 id="8-完整操作流程示例"><a href="#8-完整操作流程示例" class="headerlink" title="8. 完整操作流程示例"></a>8. 完整操作流程示例</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 反编译 APK（使用 Apktool）</span></span><br><span class="line">apktool d original.apk -o decoded</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 修改 Smali 代码后重新打包</span></span><br><span class="line">apktool b decoded -o unsigned.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 对齐 APK</span></span><br><span class="line">zipalign -v 4 unsigned.apk aligned.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 删除旧签名信息（避免冲突）</span></span><br><span class="line">zip -d aligned.apk <span class="string">&#x27;META-INF/*&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 使用 apksigner 签名</span></span><br><span class="line">apksigner sign \</span><br><span class="line">  --ks mykey.keystore \</span><br><span class="line">  --ks-key-alias myalias \</span><br><span class="line">  --out signed.apk \</span><br><span class="line">  aligned.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 验证签名</span></span><br><span class="line">apksigner verify -v signed.apk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 7. 安装测试</span></span><br><span class="line">adb install signed.apk</span><br></pre></td></tr></table></figure>
+
+<p>如果无法安装 zip，可以通过以下方式手动删除 META-INF 文件夹：</p>
+<ol>
+<li>使用解压工具（如 7-Zip、WinRAR）打开 aligned.apk</li>
+<li>删除 META-INF 文件夹</li>
+<li>保存并关闭</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">1. 准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%8D%E7%BC%96%E8%AF%91-APK"><span class="toc-number">2.</span> <span class="toc-text">2. 反编译 APK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8-Smali-%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5%E6%97%A5%E5%BF%97"><span class="toc-number">3.</span> <span class="toc-text">3. 在 Smali 代码中插入日志</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%9A%E4%BD%8D%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">3.1. 定位目标代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%8F%92%E5%85%A5%E6%97%A5%E5%BF%97%E7%9A%84-Smali-%E6%8C%87%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">3.2. 插入日志的 Smali 指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.3.</span> <span class="toc-text">3.3. 注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85-APK"><span class="toc-number">4.</span> <span class="toc-text">4. 重新打包 APK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%AD%BE%E5%90%8D-APK"><span class="toc-number">5.</span> <span class="toc-text">5. 签名 APK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%94%9F%E6%88%90%E7%AD%BE%E5%90%8D%E5%AF%86%E9%92%A5%EF%BC%88%E8%8B%A5%E6%97%A0%E5%8F%AF%E8%B7%B3%E8%BF%87%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%B7%B2%E6%9C%89%E5%AF%86%E9%92%A5%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">5.1. 生成签名密钥（若无可跳过，使用已有密钥）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%BD%BF%E7%94%A8-jarsigner-%E7%AD%BE%E5%90%8D"><span class="toc-number">5.2.</span> <span class="toc-text">5.2. 使用 jarsigner 签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%BD%BF%E7%94%A8-apksigner-%E7%AD%BE%E5%90%8D%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">5.3. 使用 apksigner 签名（推荐）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%AE%89%E8%A3%85%E5%B9%B6%E6%B5%8B%E8%AF%95"><span class="toc-number">6.</span> <span class="toc-text">6. 安装并测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3"><span class="toc-number">7.</span> <span class="toc-text">7. 常见问题与解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%BA%94%E7%94%A8%E5%B4%A9%E6%BA%83%E6%88%96%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8"><span class="toc-number">7.1.</span> <span class="toc-text">7.1. 应用崩溃或无法启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%97%A5%E5%BF%97%E6%9C%AA%E8%BE%93%E5%87%BA"><span class="toc-number">7.2.</span> <span class="toc-text">7.2. 日志未输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E7%AD%BE%E5%90%8D%E5%90%8E%E5%AE%89%E8%A3%85%E5%A4%B1%E8%B4%A5"><span class="toc-number">7.3.</span> <span class="toc-text">7.3. 签名后安装失败</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%AE%8C%E6%95%B4%E6%93%8D%E4%BD%9C%E6%B5%81%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="toc-number">8.</span> <span class="toc-text">8. 完整操作流程示例</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&text=在 Smali 代码中插入 Log"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&is_video=false&description=在 Smali 代码中插入 Log"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在 Smali 代码中插入 Log&body=Check out this article: http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&title=在 Smali 代码中插入 Log"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&name=在 Smali 代码中插入 Log&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/&t=在 Smali 代码中插入 Log"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    GZ LIU
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
