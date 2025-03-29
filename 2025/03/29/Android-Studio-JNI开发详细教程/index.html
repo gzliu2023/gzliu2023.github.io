@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1. 环境准备安装 NDK 和 CMake  打开 Android Studio → Tools → SDK Manager → SDK Tools 勾选 NDK (Native Development Kit) 和 CMake 点击 Apply 安装   2. 创建新项目新建项目  选择”Empty Activity”模板 确保语言选择 Java（或 Kotlin，本例使用 Java）    3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Studio JNI 开发详细教程">
+<meta property="og:url" content="http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="羨魚の博客">
+<meta property="og:description" content="1. 环境准备安装 NDK 和 CMake  打开 Android Studio → Tools → SDK Manager → SDK Tools 勾选 NDK (Native Development Kit) 和 CMake 点击 Apply 安装   2. 创建新项目新建项目  选择”Empty Activity”模板 确保语言选择 Java（或 Kotlin，本例使用 Java）    3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f50ba3d5a1d7e68485.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68483.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68482.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68481.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f50ba3d5a1d7e68484.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68480.png">
+<meta property="article:published_time" content="2025-03-29T14:42:25.000Z">
+<meta property="article:modified_time" content="2025-03-29T14:42:25.000Z">
+<meta property="article:author" content="GZ LIU">
+<meta property="article:tag" content="JNI">
+<meta property="article:tag" content="安卓开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/67e804f50ba3d5a1d7e68485.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Android Studio JNI 开发详细教程</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/03/23/%E5%9C%A8Smali%E4%BB%A3%E7%A0%81%E4%B8%AD%E6%8F%92%E5%85%A5Log/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&text=Android Studio JNI 开发详细教程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&is_video=false&description=Android Studio JNI 开发详细教程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android Studio JNI 开发详细教程&body=Check out this article: http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&name=Android Studio JNI 开发详细教程&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&t=Android Studio JNI 开发详细教程"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">1. 环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E6%96%B0%E9%A1%B9%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">2. 创建新项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE-NDK-%E8%B7%AF%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">3. 配置 NDK 路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA-Java-Native-%E6%8E%A5%E5%8F%A3"><span class="toc-number">4.</span> <span class="toc-text">4. 创建 Java Native 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%94%9F%E6%88%90-C-C-%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">5. 生成 C&#x2F;C++头文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BC%96%E5%86%99-C-%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">6. 编写 C++实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%85%8D%E7%BD%AE-CMake"><span class="toc-number">7.</span> <span class="toc-text">7. 配置 CMake</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%85%8D%E7%BD%AE-Gradle"><span class="toc-number">8.</span> <span class="toc-text">8. 配置 Gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%BD%BF%E7%94%A8-Native-%E6%96%B9%E6%B3%95"><span class="toc-number">9.</span> <span class="toc-text">9. 使用 Native 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E4%BF%AE%E6%94%B9%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80"><span class="toc-number">10.</span> <span class="toc-text">10. 修改页面布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%9E%84%E5%BB%BA%E8%BF%90%E8%A1%8C"><span class="toc-number">11.</span> <span class="toc-text">11. 构建运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E5%AE%8C%E6%95%B4%E7%9A%84-JNI-%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E6%A0%91"><span class="toc-number">12.</span> <span class="toc-text">12. 完整的 JNI 项目文件树</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Android Studio JNI 开发详细教程
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">GZ LIU</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-29T14:42:25.000Z" class="dt-published" itemprop="datePublished">2025-03-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/">安卓逆向</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/JNI/" rel="tag">JNI</a>, <a class="p-category" href="/tags/%E5%AE%89%E5%8D%93%E5%BC%80%E5%8F%91/" rel="tag">安卓开发</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>安装 NDK 和 CMake</p>
+<ul>
+<li>打开 Android Studio → Tools → SDK Manager → SDK Tools</li>
+<li>勾选 NDK (Native Development Kit) 和 CMake</li>
+<li>点击 Apply 安装</li>
+</ul>
+<p><img src="https://pic1.imgdb.cn/item/67e804f50ba3d5a1d7e68485.png" alt="image-20250325095619376"></p>
+<h2 id="2-创建新项目"><a href="#2-创建新项目" class="headerlink" title="2. 创建新项目"></a>2. 创建新项目</h2><p>新建项目</p>
+<ul>
+<li>选择”Empty Activity”模板</li>
+<li>确保语言选择 Java（或 Kotlin，本例使用 Java）</li>
+</ul>
+<p><img src="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68483.png" alt="image-20250325095856866"></p>
+<p><img src="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68482.png" alt="image-20250325100038611"></p>
+<h2 id="3-配置-NDK-路径"><a href="#3-配置-NDK-路径" class="headerlink" title="3. 配置 NDK 路径"></a>3. 配置 NDK 路径</h2><p>在<code>local.properties</code>中添加：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ndk.dir</span>=<span class="string">/path/to/ndk  # 通常自动配置，无需手动修改</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68481.png" alt="image-20250325100531006"></p>
+<h2 id="4-创建-Java-Native-接口"><a href="#4-创建-Java-Native-接口" class="headerlink" title="4. 创建 Java Native 接口"></a>4. 创建 Java Native 接口</h2><p>创建 Java 类</p>
+<p><code>app/src/main/java/com/example/myjnidemo/NativeLib.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.myjnidemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NativeLib</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">&quot;native-lib&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">native</span> String <span class="title function_">getNativeString</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">native</span> <span class="type">int</span> <span class="title function_">addNumbers</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-生成-C-C-头文件"><a href="#5-生成-C-C-头文件" class="headerlink" title="5. 生成 C&#x2F;C++头文件"></a>5. 生成 C&#x2F;C++头文件</h2><p>定位到 Java 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> app/src/main/java</span><br></pre></td></tr></table></figure>
+
+<p>生成头文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -h ../cpp com/example/myjnidemo/NativeLib.java</span><br></pre></td></tr></table></figure>
+
+<p>命令说明：</p>
+<ul>
+<li>编译<code>NativeLib.java</code>生成<code>.class</code>文件（存放于<code>app/src/main/java/com/example/myjnidemo/</code>）</li>
+<li>生成 JNI 头文件<code>com_example_myjnidemo_NativeLib.h</code>（存放于<code>app/src/main/cpp/</code>）</li>
+</ul>
+<h2 id="6-编写-C-实现"><a href="#6-编写-C-实现" class="headerlink" title="6. 编写 C++实现"></a>6. 编写 C++实现</h2><p>在<code>app/src/main/cpp/native-lib.cpp</code>中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span>           <span class="comment">// 明确包含，为后续扩展做准备</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;com_example_myjnidemo_NativeLib.h&quot;</span>  <span class="comment">// 关键头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用头文件中的声明，避免签名错误</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jstring JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_example_myjnidemo_NativeLib_getNativeString</span><span class="params">(JNIEnv* env, jobject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 虽然当前未使用 std::string，但包含&lt;string&gt;可为后续优化留余地</span></span><br><span class="line">    std::string message = <span class="string">&quot;Hello from C++!&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> env-&gt;<span class="built_in">NewStringUTF</span>(message.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jint JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_example_myjnidemo_NativeLib_addNumbers</span><span class="params">(JNIEnv*, jobject, jint a, jint b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;  <span class="comment">// 基础类型操作无需字符串支持</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-配置-CMake"><a href="#7-配置-CMake" class="headerlink" title="7. 配置 CMake"></a>7. 配置 CMake</h2><p>创建&#x2F;修改<code>app/CMakeLists.txt</code>：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>.<span class="number">2</span>)</span><br><span class="line"><span class="keyword">project</span>(<span class="string">&quot;native-lib&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(native-lib SHARED src/main/cpp/native-lib.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_library</span>(log-lib log)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(native-lib <span class="variable">$&#123;log-lib&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-配置-Gradle"><a href="#8-配置-Gradle" class="headerlink" title="8. 配置 Gradle"></a>8. 配置 Gradle</h2><p>在<code>app/build.gradle</code>的 android 块内添加：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        externalNativeBuild &#123;</span><br><span class="line">            cmake &#123;</span><br><span class="line">                cppFlags <span class="string">&quot;&quot;</span></span><br><span class="line">                abiFilters <span class="string">&quot;armeabi-v7a&quot;</span>, <span class="string">&quot;arm64-v8a&quot;</span>, <span class="string">&quot;x86&quot;</span>, <span class="string">&quot;x86_64&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">            path <span class="string">&quot;CMakeLists.txt&quot;</span></span><br><span class="line">            version <span class="string">&quot;3.10.2&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-使用-Native-方法"><a href="#9-使用-Native-方法" class="headerlink" title="9. 使用 Native 方法"></a>9. 使用 Native 方法</h2><p>在<code>MainActivity</code>中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        <span class="type">NativeLib</span> <span class="variable">nativeLib</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NativeLib</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">text</span> <span class="operator">=</span> nativeLib.getNativeString();</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> nativeLib.addNumbers(<span class="number">5</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">TextView</span> <span class="variable">tv</span> <span class="operator">=</span> findViewById(R.id.sample_text);</span><br><span class="line">        tv.setText(text + <span class="string">&quot;\n5 + 3 = &quot;</span> + sum);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-修改页面布局"><a href="#10-修改页面布局" class="headerlink" title="10. 修改页面布局"></a>10. 修改页面布局</h2><p>文件位置<code>app/src/main/res/layout/activity_main.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">androidx.constraintlayout.widget.ConstraintLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">&quot;http://schemas.android.com/apk/res-auto&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;.MainActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 用于显示 JNI 调用结果的 TextView --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/sample_text&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textSize</span>=<span class="string">&quot;24sp&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textColor</span>=<span class="string">&quot;@android:color/black&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">&quot;parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintLeft_toLeftOf</span>=<span class="string">&quot;parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintRight_toRightOf</span>=<span class="string">&quot;parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">&quot;parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">tools:text</span>=<span class="string">&quot;Hello from JNI!&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">androidx.constraintlayout.widget.ConstraintLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最终效果示意图</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">+-----------------------------+</span><br><span class="line">|         Hello from C++!     |</span><br><span class="line">|         5 + 3 = 8           |</span><br><span class="line">+-----------------------------+</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-构建运行"><a href="#11-构建运行" class="headerlink" title="11. 构建运行"></a>11. 构建运行</h2><ol>
+<li>点击 Build → Make Project</li>
+<li>运行到设备&#x2F;模拟器</li>
+</ol>
+<h2 id="12-完整的-JNI-项目文件树"><a href="#12-完整的-JNI-项目文件树" class="headerlink" title="12. 完整的 JNI 项目文件树"></a>12. 完整的 JNI 项目文件树</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">MyJniDemo/                  <span class="comment"># 项目根目录</span></span><br><span class="line">├── gradle/                 <span class="comment"># Gradle 包装器</span></span><br><span class="line">├── app/                    <span class="comment"># 主模块</span></span><br><span class="line">│   ├── libs/               <span class="comment"># 第三方库（本项目未使用）</span></span><br><span class="line">│   ├── src/</span><br><span class="line">│   │   └── main/</span><br><span class="line">│   │       ├── java/</span><br><span class="line">│   │       │   └── com/</span><br><span class="line">│   │       │       └── example/</span><br><span class="line">│   │       │           └── myjnidemo/</span><br><span class="line">│   │       │               ├── MainActivity.java     <span class="comment"># 主 Activity</span></span><br><span class="line">│   │       │               └── NativeLib.java        <span class="comment"># JNI 接口类</span></span><br><span class="line">│   │       ├── cpp/</span><br><span class="line">│   │       │   ├── native-lib.cpp                    <span class="comment"># C++实现</span></span><br><span class="line">│   │       │   └── com_example_myjnidemo_NativeLib.h <span class="comment"># 生成的头文件</span></span><br><span class="line">│   │       ├── res/                                  <span class="comment"># 资源文件</span></span><br><span class="line">│   │       │   ├── layout/</span><br><span class="line">│   │       │   │   └── activity_main.xml            <span class="comment"># 布局文件</span></span><br><span class="line">│   │       │   └── values/</span><br><span class="line">│   │       │       └── strings.xml                   <span class="comment"># 字符串资源</span></span><br><span class="line">│   │       └── AndroidManifest.xml                   <span class="comment"># 清单文件</span></span><br><span class="line">│   ├── CMakeLists.txt                                <span class="comment"># CMake 配置文件</span></span><br><span class="line">│   └── build.gradle                                  <span class="comment"># 模块级 Gradle 配置</span></span><br><span class="line">├── gradle/                                           <span class="comment"># Gradle 相关文件</span></span><br><span class="line">├── settings.gradle                                   <span class="comment"># 项目级设置</span></span><br><span class="line">└── local.properties                                  <span class="comment"># NDK/SDK 路径配置</span></span><br></pre></td></tr></table></figure>
+
+<p>构建后生成的。so 文件位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">app/</span><br><span class="line">└── build/</span><br><span class="line">    └── intermediates/</span><br><span class="line">        └── cmake/</span><br><span class="line">            └── debug/</span><br><span class="line">                └── obj/</span><br><span class="line">                    ├── arm64-v8a/</span><br><span class="line">                    │   └── libnative-lib.so</span><br><span class="line">                    ├── armeabi-v7a/</span><br><span class="line">                    │   └── libnative-lib.so</span><br><span class="line">                    └── x86_64/</span><br><span class="line">                        └── libnative-lib.so</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic1.imgdb.cn/item/67e804f50ba3d5a1d7e68484.png" alt="image-20250325150834365"></p>
+<p><img src="https://pic1.imgdb.cn/item/67e804f40ba3d5a1d7e68480.png" alt="image-20250325151048399"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">1. 环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E6%96%B0%E9%A1%B9%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">2. 创建新项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE-NDK-%E8%B7%AF%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">3. 配置 NDK 路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA-Java-Native-%E6%8E%A5%E5%8F%A3"><span class="toc-number">4.</span> <span class="toc-text">4. 创建 Java Native 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%94%9F%E6%88%90-C-C-%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">5. 生成 C&#x2F;C++头文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BC%96%E5%86%99-C-%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">6. 编写 C++实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%85%8D%E7%BD%AE-CMake"><span class="toc-number">7.</span> <span class="toc-text">7. 配置 CMake</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%85%8D%E7%BD%AE-Gradle"><span class="toc-number">8.</span> <span class="toc-text">8. 配置 Gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%BD%BF%E7%94%A8-Native-%E6%96%B9%E6%B3%95"><span class="toc-number">9.</span> <span class="toc-text">9. 使用 Native 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E4%BF%AE%E6%94%B9%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80"><span class="toc-number">10.</span> <span class="toc-text">10. 修改页面布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%9E%84%E5%BB%BA%E8%BF%90%E8%A1%8C"><span class="toc-number">11.</span> <span class="toc-text">11. 构建运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E5%AE%8C%E6%95%B4%E7%9A%84-JNI-%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E6%A0%91"><span class="toc-number">12.</span> <span class="toc-text">12. 完整的 JNI 项目文件树</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&text=Android Studio JNI 开发详细教程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&is_video=false&description=Android Studio JNI 开发详细教程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android Studio JNI 开发详细教程&body=Check out this article: http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&title=Android Studio JNI 开发详细教程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&name=Android Studio JNI 开发详细教程&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/03/29/Android-Studio-JNI%E5%BC%80%E5%8F%91%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/&t=Android Studio JNI 开发详细教程"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    GZ LIU
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/gzliu2023">项目</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
