@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>代码随想录算法训练营第九天 | 151、kama55</title>
+      <link href="/2025/05/12/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B9%9D%E5%A4%A9-151%E3%80%81kama55/"/>
+      <url>/2025/05/12/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B9%9D%E5%A4%A9-151%E3%80%81kama55/</url>
+      
+        <content type="html"><![CDATA[<h2 id="151-翻转字符串里的单词"><a href="#151-翻转字符串里的单词" class="headerlink" title="151. 翻转字符串里的单词"></a>151. 翻转字符串里的单词</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;strings&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">reverseWords</span><span class="params">(s <span class="type">string</span>)</span></span> <span class="type">string</span> &#123;</span><br><span class="line">    words := strings.Fields(s)</span><br><span class="line">    n := <span class="built_in">len</span>(words)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n/<span class="number">2</span>; i++ &#123;</span><br><span class="line">        words[i], words[n<span class="number">-1</span>-i] = words[n<span class="number">-1</span>-i], words[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> strings.Join(words, <span class="string">&quot; &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="kama55-右旋转字符串"><a href="#kama55-右旋转字符串" class="headerlink" title="kama55. 右旋转字符串"></a>kama55. 右旋转字符串</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;bufio&quot;</span></span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;os&quot;</span></span><br><span class="line">    <span class="string">&quot;strconv&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    scanner := bufio.NewScanner(os.Stdin)</span><br><span class="line">    scanner.Scan()</span><br><span class="line">    kStr := scanner.Text()</span><br><span class="line">    k, _ := strconv.Atoi(kStr)</span><br><span class="line">    scanner.Scan()</span><br><span class="line">    s := scanner.Text()</span><br><span class="line"></span><br><span class="line">    n := <span class="built_in">len</span>(s)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">        fmt.Println(<span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    k = k % n</span><br><span class="line">    rightPart := s[n-k:]</span><br><span class="line">    leftPart := s[:n-k]</span><br><span class="line">    fmt.Println(rightPart + leftPart)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> leetcode </tag>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 字符串 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代码随想录算法训练营第八天 | 344、541、kama54</title>
       <link href="/2025/05/02/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%85%AB%E5%A4%A9-344%E3%80%81541%E3%80%81kama54/"/>
       <url>/2025/05/02/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%85%AB%E5%A4%A9-344%E3%80%81541%E3%80%81kama54/</url>
