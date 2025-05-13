@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>代码随想录算法训练营第十一天 | 150</title>
+      <link href="/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9-150/"/>
+      <url>/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9-150/</url>
+      
+        <content type="html"><![CDATA[<h2 id="150-逆波兰表达式求值"><a href="#150-逆波兰表达式求值" class="headerlink" title="150. 逆波兰表达式求值"></a>150. 逆波兰表达式求值</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;strconv&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">evalRPN</span><span class="params">(tokens []<span class="type">string</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    stack := []<span class="type">int</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> _, token := <span class="keyword">range</span> tokens &#123;</span><br><span class="line">        <span class="keyword">switch</span> token &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;+&quot;</span>, <span class="string">&quot;-&quot;</span>, <span class="string">&quot;*&quot;</span>, <span class="string">&quot;/&quot;</span>:</span><br><span class="line">            <span class="comment">// 弹出两个操作数</span></span><br><span class="line">            b := stack[<span class="built_in">len</span>(stack)<span class="number">-1</span>]</span><br><span class="line">            stack = stack[:<span class="built_in">len</span>(stack)<span class="number">-1</span>]</span><br><span class="line">            a := stack[<span class="built_in">len</span>(stack)<span class="number">-1</span>]</span><br><span class="line">            stack = stack[:<span class="built_in">len</span>(stack)<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">var</span> res <span class="type">int</span></span><br><span class="line">            <span class="keyword">switch</span> token &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;+&quot;</span>:</span><br><span class="line">                res = a + b</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;-&quot;</span>:</span><br><span class="line">                res = a - b</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;*&quot;</span>:</span><br><span class="line">                res = a * b</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;/&quot;</span>:</span><br><span class="line">                res = a / b</span><br><span class="line">            &#125;</span><br><span class="line">            stack = <span class="built_in">append</span>(stack, res)</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            num, _ := strconv.Atoi(token)</span><br><span class="line">            stack = <span class="built_in">append</span>(stack, num)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> leetcode </tag>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 栈与队列 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代码随想录算法训练营第十天 | 232、225、20、1047</title>
       <link href="/2025/05/12/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E5%A4%A9-232%E3%80%81225%E3%80%8120%E3%80%811047/"/>
       <url>/2025/05/12/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E5%A4%A9-232%E3%80%81225%E3%80%8120%E3%80%811047/</url>
@@ -115,11 +146,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 哈希表 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -146,11 +177,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 哈希表 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -239,11 +270,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 数组 </tag>
             
         </tags>
       
@@ -270,11 +301,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 数组 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 数组 </tag>
             
         </tags>
       
