@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>代码随想录算法训练营第十二天 | 144、145、94</title>
+      <link href="/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A4%A9-144%E3%80%81145%E3%80%8194/"/>
+      <url>/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A4%A9-144%E3%80%81145%E3%80%8194/</url>
+      
+        <content type="html"><![CDATA[<h2 id="144-二叉树的前序遍历"><a href="#144-二叉树的前序遍历" class="headerlink" title="144. 二叉树的前序遍历"></a>144. 二叉树的前序遍历</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">// Definition for a binary tree node.</span></span><br><span class="line"><span class="keyword">type</span> TreeNode <span class="keyword">struct</span> &#123;</span><br><span class="line">    Val   <span class="type">int</span></span><br><span class="line">    Left  *TreeNode</span><br><span class="line">    Right *TreeNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">preorderTraversal</span><span class="params">(root *TreeNode)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> result []<span class="type">int</span></span><br><span class="line">    <span class="keyword">var</span> traverse <span class="function"><span class="keyword">func</span><span class="params">(*TreeNode)</span></span></span><br><span class="line">    traverse = <span class="function"><span class="keyword">func</span><span class="params">(node *TreeNode)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 前序遍历：根 -&gt; 左 -&gt; 右</span></span><br><span class="line">        result = <span class="built_in">append</span>(result, node.Val)</span><br><span class="line">        traverse(node.Left)</span><br><span class="line">        traverse(node.Right)</span><br><span class="line">    &#125;</span><br><span class="line">    traverse(root)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="145-二叉树的后序遍历"><a href="#145-二叉树的后序遍历" class="headerlink" title="145. 二叉树的后序遍历"></a>145. 二叉树的后序遍历</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">postorderTraversal</span><span class="params">(root *TreeNode)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> result []<span class="type">int</span></span><br><span class="line">    <span class="keyword">var</span> traverse <span class="function"><span class="keyword">func</span><span class="params">(*TreeNode)</span></span></span><br><span class="line">    traverse = <span class="function"><span class="keyword">func</span><span class="params">(node *TreeNode)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 后序遍历：左 -&gt; 右 -&gt; 根</span></span><br><span class="line">        traverse(node.Left)</span><br><span class="line">        traverse(node.Right)</span><br><span class="line">        result = <span class="built_in">append</span>(result, node.Val)</span><br><span class="line">    &#125;</span><br><span class="line">    traverse(root)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="94-二叉树的中序遍历"><a href="#94-二叉树的中序遍历" class="headerlink" title="94. 二叉树的中序遍历"></a>94. 二叉树的中序遍历</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * type TreeNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Left *TreeNode</span></span><br><span class="line"><span class="comment"> *     Right *TreeNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">inorderTraversal</span><span class="params">(root *TreeNode)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> result []<span class="type">int</span></span><br><span class="line">    <span class="keyword">var</span> traverse <span class="function"><span class="keyword">func</span><span class="params">(*TreeNode)</span></span></span><br><span class="line">    traverse = <span class="function"><span class="keyword">func</span><span class="params">(node *TreeNode)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 中序遍历：左 -&gt; 根 -&gt; 右</span></span><br><span class="line">        traverse(node.Left)</span><br><span class="line">        result = <span class="built_in">append</span>(result, node.Val)</span><br><span class="line">        traverse(node.Right)</span><br><span class="line">    &#125;</span><br><span class="line">    traverse(root)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> leetcode </tag>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 二叉树 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代码随想录算法训练营第十一天 | 150</title>
       <link href="/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9-150/"/>
       <url>/2025/05/13/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9-150/</url>
@@ -146,11 +177,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 哈希表 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -177,11 +208,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 哈希表 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -270,11 +301,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 数组 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 数组 </tag>
             
         </tags>
       
@@ -301,11 +332,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 数组 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 数组 </tag>
             
         </tags>
       
