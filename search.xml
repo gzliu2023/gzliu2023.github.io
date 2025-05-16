@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>代码随想录算法训练营第十九天 | 235、701、450</title>
+      <link href="/2025/05/16/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B9%9D%E5%A4%A9-235%E3%80%81701%E3%80%81450/"/>
+      <url>/2025/05/16/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E4%B9%9D%E5%A4%A9-235%E3%80%81701%E3%80%81450/</url>
+      
+        <content type="html"><![CDATA[<h2 id="235-二叉搜索树的最近公共祖先"><a href="#235-二叉搜索树的最近公共祖先" class="headerlink" title="235. 二叉搜索树的最近公共祖先"></a>235. 二叉搜索树的最近公共祖先</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * type TreeNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val   int</span></span><br><span class="line"><span class="comment"> *     Left  *TreeNode</span></span><br><span class="line"><span class="comment"> *     Right *TreeNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">lowestCommonAncestor</span><span class="params">(root, p, q *TreeNode)</span></span> *TreeNode &#123;</span><br><span class="line">    <span class="comment">// 确定 p 和 q 的值中的最小值和最大值</span></span><br><span class="line">    pVal, qVal := p.Val, q.Val</span><br><span class="line">    <span class="keyword">if</span> pVal &gt; qVal &#123;</span><br><span class="line">        pVal, qVal = qVal, pVal</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    current := root</span><br><span class="line">    <span class="keyword">for</span> current != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="comment">// 当前节点值比最大值大，LCA 在左子树</span></span><br><span class="line">        <span class="keyword">if</span> current.Val &gt; qVal &#123;</span><br><span class="line">            current = current.Left</span><br><span class="line">            <span class="comment">// 当前节点值比最小值小，LCA 在右子树</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> current.Val &lt; pVal &#123;</span><br><span class="line">            current = current.Right</span><br><span class="line">            <span class="comment">// 当前节点介于 p 和 q 之间（或等于其中一个），即为 LCA</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> current</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span> <span class="comment">// 题目保证存在，此处不会执行</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="701-二叉搜索树中的插入操作"><a href="#701-二叉搜索树中的插入操作" class="headerlink" title="701. 二叉搜索树中的插入操作"></a>701. 二叉搜索树中的插入操作</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * type TreeNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Left *TreeNode</span></span><br><span class="line"><span class="comment"> *     Right *TreeNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">insertIntoBST</span><span class="params">(root *TreeNode, val <span class="type">int</span>)</span></span> *TreeNode &#123;</span><br><span class="line">    <span class="keyword">if</span> root == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> &amp;TreeNode&#123;Val: val&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> val &lt; root.Val &#123;</span><br><span class="line">        root.Left = insertIntoBST(root.Left, val)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        root.Right = insertIntoBST(root.Right, val)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="450-删除二叉搜索树中的节点"><a href="#450-删除二叉搜索树中的节点" class="headerlink" title="450. 删除二叉搜索树中的节点"></a>450. 删除二叉搜索树中的节点</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * type TreeNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Left *TreeNode</span></span><br><span class="line"><span class="comment"> *     Right *TreeNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deleteNode</span><span class="params">(root *TreeNode, key <span class="type">int</span>)</span></span> *TreeNode &#123;</span><br><span class="line">    <span class="keyword">if</span> root == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> key &lt; root.Val &#123;</span><br><span class="line">        root.Left = deleteNode(root.Left, key)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> key &gt; root.Val &#123;</span><br><span class="line">        root.Right = deleteNode(root.Right, key)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 当前节点为要删除的节点</span></span><br><span class="line">        <span class="keyword">if</span> root.Left == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> root.Right</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> root.Right == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> root.Left</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 找到右子树的最小节点</span></span><br><span class="line">            minNode := findMin(root.Right)</span><br><span class="line">            root.Val = minNode.Val</span><br><span class="line">            <span class="comment">// 删除右子树中的最小节点</span></span><br><span class="line">            root.Right = deleteNode(root.Right, minNode.Val)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：找到子树的最小节点</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findMin</span><span class="params">(node *TreeNode)</span></span> *TreeNode &#123;</span><br><span class="line">    <span class="keyword">for</span> node.Left != <span class="literal">nil</span> &#123;</span><br><span class="line">        node = node.Left</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> leetcode </tag>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 二叉树 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代码随想录算法训练营第十八天 | 530、501、236</title>
       <link href="/2025/05/16/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E5%85%AB%E5%A4%A9-530%E3%80%81501%E3%80%81236/"/>
       <url>/2025/05/16/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E5%8D%81%E5%85%AB%E5%A4%A9-530%E3%80%81501%E3%80%81236/</url>
@@ -332,11 +363,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 哈希表 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -363,11 +394,11 @@
             
             <tag> leetcode </tag>
             
-            <tag> 哈希表 </tag>
-            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
+            
+            <tag> 哈希表 </tag>
             
         </tags>
       
@@ -456,11 +487,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 数组 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 数组 </tag>
             
         </tags>
       
@@ -487,11 +518,11 @@
             
             <tag> leetcode </tag>
             
+            <tag> 数组 </tag>
+            
             <tag> 算法 </tag>
             
             <tag> 代码随想录算法训练营 </tag>
-            
-            <tag> 数组 </tag>
             
         </tags>
       
