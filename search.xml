@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>八股训练营总结：40 天系统化知识巩固</title>
+      <link href="/2025/05/30/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83%E8%90%A5%E6%80%BB%E7%BB%93%EF%BC%9A40%E5%A4%A9%E7%B3%BB%E7%BB%9F%E5%8C%96%E7%9F%A5%E8%AF%86%E5%B7%A9%E5%9B%BA/"/>
+      <url>/2025/05/30/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83%E8%90%A5%E6%80%BB%E7%BB%93%EF%BC%9A40%E5%A4%A9%E7%B3%BB%E7%BB%9F%E5%8C%96%E7%9F%A5%E8%AF%86%E5%B7%A9%E5%9B%BA/</url>
+      
+        <content type="html"><![CDATA[<h2 id="八股训练营总结：40-天系统化知识巩固"><a href="#八股训练营总结：40-天系统化知识巩固" class="headerlink" title="八股训练营总结：40 天系统化知识巩固"></a>八股训练营总结：40 天系统化知识巩固</h2><p>为期 40 天的八股训练营结束，现将个人收获总结如下：</p><h3 id="1-知识体系化"><a href="#1-知识体系化" class="headerlink" title="1. 知识体系化"></a>1. 知识体系化</h3><ul><li><strong>数据库</strong>：系统梳理索引机制（B+树）、事务（ACID、隔离级别与锁实现）、查询优化策略。</li><li><strong>操作系统</strong>：深入理解进程&#x2F;线程&#x2F;协程模型、调度算法、内存管理（分页&#x2F;分段、虚拟内存）及进程间通信。</li><li><strong>计算机网络</strong>：清晰掌握协议栈分层（TCP&#x2F;IP）、核心协议机制（TCP 三次握手&#x2F;四次挥手、可靠传输、拥塞控制）、HTTP&#x2F;HTTPS 关键流程。</li><li><strong>GO 语言</strong>：重点强化并发模型（GMP 调度原理）、Channel 通信机制、<code>context</code>包应用场景及内存管理。</li></ul><h3 id="2-高频问题强化"><a href="#2-高频问题强化" class="headerlink" title="2. 高频问题强化"></a>2. 高频问题强化</h3><ul><li>针对性训练高频问题：<ul><li>Redis 持久化（RDB&#x2F;AOF 对比）</li><li>HTTPS 工作流程与加密原理</li><li>GO Channel 死锁场景分析</li><li>进程&#x2F;线程&#x2F;协程核心区别</li></ul></li><li>实现从记忆背诵到原理推导的转变。</li></ul><h3 id="3-学习模式优化"><a href="#3-学习模式优化" class="headerlink" title="3. 学习模式优化"></a>3. 学习模式优化</h3><ul><li><strong>持续学习</strong>：每日打卡机制保障学习连贯性</li><li><strong>知识管理</strong>：采用笔记整理、绘制知识图谱（如 TCP 状态转换图）提升知识留存率</li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本次训练营完成了对计算机核心面试知识的系统化梳理与强化，建立了结构化知识框架。后续计划：</p><ol><li>持续完善技术知识图谱</li><li>定期复习高频面试问题</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 随笔 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机八股 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代码随想录算法训练营第三十三天 | 62、63</title>
       <link href="/2025/05/29/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%89%E5%8D%81%E4%B8%89%E5%A4%A9-62%E3%80%8163/"/>
       <url>/2025/05/29/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E7%AE%97%E6%B3%95%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%B8%89%E5%8D%81%E4%B8%89%E5%A4%A9-62%E3%80%8163/</url>
